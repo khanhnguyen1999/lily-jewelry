@@ -61,20 +61,20 @@ const ProductInfo = ({ product, breadcrumb }: ProductInfoProps) => {
       {/* Product details */}
       <div className="space-y-4 py-4 border-b border-border">
         {product.material && (
-          <div className="space-y-2">
+          <div className="space-y-2 flex items-center justify-between">
             <h3 className="text-sm font-light text-foreground">Chất liệu</h3>
             <p className="text-sm font-light text-muted-foreground">{product.material}</p>
           </div>
         )}
 
         {product.category && (
-          <div className="space-y-2">
+          <div className="space-y-2 flex items-center justify-between">
             <h3 className="text-sm font-light text-foreground">Danh mục</h3>
             <p className="text-sm font-light text-muted-foreground">{product.category}</p>
           </div>
         )}
 
-        <div className="space-y-2">
+        <div className="space-y-2 flex items-center justify-between">
           <h3 className="text-sm font-light text-foreground">Tình trạng</h3>
           <p className="text-sm font-light text-muted-foreground">
             {product.stock ?? "Liên hệ"}
@@ -82,9 +82,9 @@ const ProductInfo = ({ product, breadcrumb }: ProductInfoProps) => {
         </div>
 
         {product.tags && product.tags.length > 0 && (
-          <div className="space-y-2">
+          <div className="space-y-2 flex items-center justify-between">
             <h3 className="text-sm font-light text-foreground">Tags</h3>
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-2 justify-end">
               {product.tags.map((tag) => (
                 <span
                   key={tag}
