@@ -1,10 +1,38 @@
 import { useState, useRef } from "react";
 import ImageZoom from "./ImageZoom";
+import { imageUrl } from "@/lib/products";
 
 interface ProductImageGalleryProps {
   images: string[];
   alt: string;
 }
+
+/** Image that shows a pulsing skeleton until it finishes loading. */
+const GalleryImage = ({
+  src,
+  alt,
+  eager,
+}: {
+  src: string;
+  alt: string;
+  eager?: boolean;
+}) => {
+  const [loaded, setLoaded] = useState(false);
+  return (
+    <>
+      {!loaded && <div className="absolute inset-0 bg-muted/40 animate-pulse" />}
+      <img
+        src={src}
+        alt={alt}
+        loading={eager ? "eager" : "lazy"}
+        onLoad={() => setLoaded(true)}
+        className={`w-full h-full object-cover transition-all duration-500 group-hover:scale-105 select-none ${
+          loaded ? "opacity-100" : "opacity-0"
+        }`}
+      />
+    </>
+  );
+};
 
 const ProductImageGallery = ({ images, alt }: ProductImageGalleryProps) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -68,14 +96,13 @@ const ProductImageGallery = ({ images, alt }: ProductImageGalleryProps) => {
           {images.map((image, index) => (
             <div
               key={index}
-              className="w-full aspect-square overflow-hidden cursor-pointer group"
+              className="relative w-full aspect-square overflow-hidden cursor-pointer group bg-muted/20"
               onClick={() => handleImageClick(index)}
             >
-              <img
-                src={image}
+              <GalleryImage
+                src={imageUrl(image, { width: 900, quality: 75 })}
                 alt={`${alt} — ảnh ${index + 1}`}
-                loading={index > 1 ? "lazy" : "eager"}
-                className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                eager={index <= 1}
               />
             </div>
           ))}
@@ -86,16 +113,17 @@ const ProductImageGallery = ({ images, alt }: ProductImageGalleryProps) => {
       <div className="lg:hidden">
         <div className="relative">
           <div
-            className="w-full aspect-square overflow-hidden cursor-pointer group touch-pan-y"
+            className="relative w-full aspect-square overflow-hidden cursor-pointer group touch-pan-y bg-muted/20"
             onClick={() => handleImageClick(currentImageIndex)}
             onTouchStart={handleTouchStart}
             onTouchMove={handleTouchMove}
             onTouchEnd={handleTouchEnd}
           >
-            <img
-              src={images[currentImageIndex]}
+            <GalleryImage
+              key={currentImageIndex}
+              src={imageUrl(images[currentImageIndex], { width: 900, quality: 75 })}
               alt={`${alt} — ảnh ${currentImageIndex + 1}`}
-              className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105 select-none"
+              eager
             />
           </div>
 
@@ -114,9 +142,9 @@ const ProductImageGallery = ({ images, alt }: ProductImageGalleryProps) => {
         </div>
       </div>
 
-      {/* Image Zoom Modal */}
+      {/* Image Zoom Modal — larger transform for full-screen viewing */}
       <ImageZoom
-        images={images}
+        images={images.map((img) => imageUrl(img, { width: 1600, quality: 80 }))}
         initialIndex={zoomInitialIndex}
         isOpen={isZoomOpen}
         onClose={() => setIsZoomOpen(false)}

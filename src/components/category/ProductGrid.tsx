@@ -1,7 +1,8 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "react-router-dom";
 import Pagination from "./Pagination";
-import { currentPriceVnd, formatVnd, type Product } from "@/lib/products";
+import { currentPriceVnd, formatVnd, imageUrl, type Product } from "@/lib/products";
+import ProductCardSkeleton from "@/components/product/ProductCardSkeleton";
 
 interface ProductGridProps {
   products: Product[];
@@ -16,11 +17,8 @@ const ProductGrid = ({ products, page, pageCount, onPageChange, isLoading }: Pro
     return (
       <section className="w-full px-6 mb-16">
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
-          {Array.from({ length: 8 }).map((_, i) => (
-            <div key={i}>
-              <div className="aspect-square mb-3 bg-muted/30 animate-pulse" />
-              <div className="h-4 w-2/3 bg-muted/30 animate-pulse" />
-            </div>
+          {Array.from({ length: 12 }).map((_, i) => (
+            <ProductCardSkeleton key={i} />
           ))}
         </div>
       </section>
@@ -41,8 +39,8 @@ const ProductGrid = ({ products, page, pageCount, onPageChange, isLoading }: Pro
     <section className="w-full px-6 mb-16">
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
         {products.map((product) => {
-          const mainImage = product.images?.[0];
-          const hoverImage = product.images?.[1] ?? mainImage;
+          const mainImage = imageUrl(product.images?.[0], { width: 500 });
+          const hoverImage = imageUrl(product.images?.[1] ?? product.images?.[0], { width: 500 });
           return (
             <Link key={product.id} to={`/product/${product.id}`}>
               <Card className="border-none shadow-none bg-transparent group cursor-pointer">

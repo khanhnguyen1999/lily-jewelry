@@ -10,8 +10,10 @@ import {
   currentPriceVnd,
   formatVnd,
   getNewestProducts,
+  imageUrl,
   type Product,
 } from "@/lib/products";
+import ProductCardSkeleton from "@/components/product/ProductCardSkeleton";
 
 interface ProductCarouselProps {
   /** Products to display; when omitted the newest products are fetched. */
@@ -19,12 +21,25 @@ interface ProductCarouselProps {
 }
 
 const ProductCarousel = ({ products }: ProductCarouselProps) => {
-  const { data: fallback } = useQuery({
+  const { data: fallback, isLoading } = useQuery({
     queryKey: ["products", "newest"],
     queryFn: () => getNewestProducts(8),
     enabled: !products,
     staleTime: 60_000,
   });
+
+  // Only the self-fetching variant can be in a loading state.
+  if (!products && isLoading) {
+    return (
+      <section className="w-full mb-16 px-6">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <ProductCardSkeleton key={i} />
+          ))}
+        </div>
+      </section>
+    );
+  }
 
   const items = products ?? fallback ?? [];
   if (!items.length) return null;
@@ -34,8 +49,8 @@ const ProductCarousel = ({ products }: ProductCarouselProps) => {
       <Carousel opts={{ align: "start", loop: false }} className="w-full">
         <CarouselContent className="">
           {items.map((product) => {
-            const mainImage = product.images?.[0];
-            const hoverImage = product.images?.[1] ?? mainImage;
+            const mainImage = imageUrl(product.images?.[0], { width: 500 });
+            const hoverImage = imageUrl(product.images?.[1] ?? product.images?.[0], { width: 500 });
             return (
               <CarouselItem
                 key={product.id}

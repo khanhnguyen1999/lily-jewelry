@@ -49,12 +49,42 @@ const ProductDetail = () => {
       <div className="min-h-screen bg-background">
         <Header />
         <main className="pt-6 px-6">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-0">
-            <div className="aspect-square bg-muted/30 animate-pulse" />
-            <div className="lg:pl-12 mt-8 lg:mt-0 space-y-4">
-              <div className="h-4 w-40 bg-muted/30 animate-pulse" />
-              <div className="h-8 w-3/4 bg-muted/30 animate-pulse" />
-              <div className="h-6 w-32 bg-muted/30 animate-pulse" />
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-0 animate-pulse">
+            {/* Gallery */}
+            <div className="aspect-square bg-muted/40" />
+
+            {/* Info column */}
+            <div className="lg:pl-12 mt-8 lg:mt-0 space-y-6">
+              <div className="h-3 w-32 bg-muted/40" />
+              <div className="flex justify-between gap-6">
+                <div className="space-y-2 flex-1">
+                  <div className="h-3 w-24 bg-muted/40" />
+                  <div className="h-7 w-3/4 bg-muted/40" />
+                </div>
+                <div className="h-6 w-28 bg-muted/40" />
+              </div>
+
+              {/* Detail rows */}
+              <div className="space-y-4 py-4 border-b border-border">
+                {Array.from({ length: 3 }).map((_, i) => (
+                  <div key={i} className="space-y-2">
+                    <div className="h-3 w-20 bg-muted/40" />
+                    <div className="h-4 w-40 bg-muted/40" />
+                  </div>
+                ))}
+              </div>
+
+              {/* CTA */}
+              <div className="h-12 w-full bg-muted/40" />
+
+              {/* Accordion rows */}
+              <div className="border-t border-border">
+                {Array.from({ length: 4 }).map((_, i) => (
+                  <div key={i} className="h-14 border-b border-border flex items-center">
+                    <div className="h-4 w-32 bg-muted/40" />
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </main>

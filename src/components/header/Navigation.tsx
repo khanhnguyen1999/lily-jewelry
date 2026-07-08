@@ -5,6 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import {
   formatVnd,
   getSearchIndex,
+  imageUrl,
   searchProducts,
   type SearchProduct,
 } from "@/lib/products";
@@ -288,7 +289,7 @@ const Navigation = () => {
                               <div className="w-14 h-14 bg-muted/10 overflow-hidden shrink-0">
                                 {p.images?.[0] && (
                                   <img
-                                    src={p.images[0]}
+                                    src={imageUrl(p.images[0], { width: 120 })}
                                     alt={p.name}
                                     loading="lazy"
                                     className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"

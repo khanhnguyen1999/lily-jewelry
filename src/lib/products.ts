@@ -38,6 +38,28 @@ export function categorySlugFromName(name: string | null | undefined): string {
   return CATEGORIES.find((c) => c.name === name)?.slug ?? "all";
 }
 
+/**
+ * Rewrite a Supabase Storage public URL to the on-the-fly image-transform
+ * endpoint (resize + re-compress) — dramatically smaller payloads and a
+ * long CDN cache. Non-Supabase URLs are returned untouched.
+ */
+export function imageUrl(
+  url: string | null | undefined,
+  opts: { width?: number; quality?: number } = {},
+): string {
+  if (!url) return "";
+  const marker = "/storage/v1/object/public/";
+  const i = url.indexOf(marker);
+  if (i === -1) return url; // external image → leave as-is
+  const base = url.slice(0, i);
+  const path = url.slice(i + marker.length);
+  const params = new URLSearchParams();
+  if (opts.width) params.set("width", String(opts.width));
+  params.set("quality", String(opts.quality ?? 70));
+  params.set("resize", "contain");
+  return `${base}/storage/v1/render/image/public/${path}?${params.toString()}`;
+}
+
 export function formatVnd(v: number | null | undefined): string {
   if (v == null) return "";
   return new Intl.NumberFormat("vi-VN", {
